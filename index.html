@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daftar File Repository</title>
+</head>
+<body>
+    <h2>Daftar File</h2>
+    <ul id="fileList"></ul>
+
+    <script>
+        const username = "fikrycry";
+        const repo = "UTBK-Hosting";
+        const branch = "main";
+
+        fetch(`https://api.github.com/repos/${username}/${repo}/git/trees/${branch}?recursive=1`)
+            .then(response => response.json())
+            .then(data => {
+                const fileList = document.getElementById("fileList");
+
+                data.tree.forEach(file => {
+                    if (file.type === "blob") {
+                        const li = document.createElement("li");
+                        const a = document.createElement("a");
+                        a.href = `https://${username}.github.io/${repo}/${file.path}`;
+                        a.textContent = file.path;
+                        li.appendChild(a);
+                        fileList.appendChild(li);
+                    }
+                });
+            })
+            .catch(error => {
+                document.body.innerHTML += "<p>Error mengambil data.</p>";
+            });
+    </script>
+</body>
+</html>
